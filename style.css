@@ -1,0 +1,419 @@
+body {
+    background: linear-gradient(135deg, #e3f1ff 0%, #bdddfb 100%);
+    font-family: 'Tajawal', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+.quad-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 17px;
+    padding: 16px 2px;
+    min-height: 100vh;
+    justify-items: center;
+    align-items: center;
+}
+
+.clock-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.clock-face {
+    width: 750px;
+    height: 750px;
+    position: relative;
+    background: radial-gradient(circle at 62% 38%, #fafdff 77%, #ddeffe 100%);
+    border: 5px solid #133d61;
+    border-radius: 50%;
+    box-shadow: 0 5px 17px 0 #8ec9fa2e;
+    margin-bottom: 8px;
+    overflow: visible;
+}
+.hand.hour {
+    width: 18px;
+    height: 200px;  /* اجعلها تصل بين المركز والثلث الأول */
+    background: linear-gradient(180deg, #14305b 64%, #3189e2 100%);
+    border-radius: 9px;
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform: translate(-50%, 0) rotate(0deg);
+    transform-origin: bottom center;
+    z-index: 3;
+}
+.hand.minute {
+    width: 11px;
+    height: 295px;  /* إلى ما قبل السنون الكبيرة */
+    background: linear-gradient(180deg, #197dbe 60%, #a3d5ff 100%);
+    border-radius: 7px;
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform: translate(-50%, 0) rotate(0deg);
+    transform-origin: bottom center;
+    z-index: 2;
+}
+.hand.second {
+    width: 5px;
+    height: 340px;  /* تقريباً إلى حدود السنون */
+    background: linear-gradient(180deg, #fd3838 72%, #ffbebe 100%);
+    border-radius: 4px;
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform: translate(-50%, 0) rotate(0deg);
+    transform-origin: bottom center;
+    z-index: 1;
+}
+
+.clock-face::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 23px; height: 23px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 11;
+    border: 2.5px solid #93c3ee;
+    box-shadow: 0 0 10px #1a71d322;
+}
+.numbers {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0; top: 0;
+    z-index: 10;
+}
+.numbers span {
+    font-size: 2.6em;
+    font-weight: bold;
+    color: #1670cf;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    user-select: none;
+    letter-spacing: 2.5px;
+    filter: drop-shadow(0 0 5px #7fc2ff11);
+    text-shadow: 0 2px 9px #fff, 0 2px 7px #9dd1ffcc;
+}
+
+/* أرقام الساعة، كل رقم بموقعه */
+.number12 { transform: translate(-50%, -50%) rotate(0deg)    translateY(-360px) rotate(0deg);}
+.number1  { transform: translate(-50%, -50%) rotate(30deg)   translateY(-360px) rotate(-30deg);}
+.number2  { transform: translate(-50%, -50%) rotate(60deg)   translateY(-360px) rotate(-60deg);}
+.number3  { transform: translate(-50%, -50%) rotate(90deg)   translateY(-360px) rotate(-90deg);}
+.number4  { transform: translate(-50%, -50%) rotate(120deg)  translateY(-360px) rotate(-120deg);}
+.number5  { transform: translate(-50%, -50%) rotate(150deg)  translateY(-360px) rotate(-150deg);}
+.number6  { transform: translate(-50%, -50%) rotate(180deg)  translateY(-360px) rotate(-180deg);}
+.number7  { transform: translate(-50%, -50%) rotate(210deg)  translateY(-360px) rotate(-210deg);}
+.number8  { transform: translate(-50%, -50%) rotate(240deg)  translateY(-360px) rotate(-240deg);}
+.number9  { transform: translate(-50%, -50%) rotate(270deg)  translateY(-360px) rotate(-270deg);}
+.number10 { transform: translate(-50%, -20%) rotate(300deg)  translateY(-360px) rotate(-300deg);}
+.number11 { transform: translate(-50%, -50%) rotate(330deg)  translateY(-360px) rotate(-330deg);}
+
+
+.center-label {
+    position: absolute;
+    left: 50%; top: 53%;
+    transform: translate(-50%, -50%);
+    color: #1670cf;
+    text-align: center;
+    z-index: 20;
+    font-size: 1em;
+    font-weight: 900;
+    font-family: Arial, sans-serif;
+    letter-spacing: 1.3px;
+    pointer-events: none;
+    width: 70px;
+    line-height: 1.13;
+}
+.center-label .arrival {
+    font-size: 0.47em;
+    margin-top: 2px;
+    letter-spacing: 1.5px;
+    font-weight: 400;
+    color: #4091d9;
+    line-height: 1.1;
+}
+.digital {
+    font-size: 1.01em;
+    margin-bottom: 7px;
+    color: #17609b;
+    letter-spacing: 1.1px;
+    font-family: monospace;
+}
+.flight-label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    color: #114488;
+    font-size: 0.65em;
+    font-weight: bold;
+    background: #fff;
+    border-radius: 8px;
+    padding: 2px 7px 2px 7px;
+    box-shadow: 0 1px 7px #0002;
+    border: 1px solid #b8d9f9;
+    min-width: 35px;
+    min-height: 14px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    opacity: 0.98;
+    z-index: 22;
+    transition: box-shadow 0.12s;
+    pointer-events: auto;
+}
+.flight-tooltip {
+    transition: opacity 0.08s;
+    opacity: 0.97;
+    max-width: 270px;
+    white-space: normal;
+    color: #03477c;
+}
+
+.flight-label .tooltip {
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    color: #114488;
+    border: 1.1px solid #aad0ff;
+    border-radius: 7px;
+    padding: 8px 13px;
+    box-shadow: 0 2px 12px #0002;
+    min-width: 120px;
+    z-index: 2000;
+    font-size: 0.98em;
+    font-weight: normal;
+    text-align: right;
+    white-space: pre-line;
+    pointer-events: none;
+}
+.flight-label:hover .tooltip {
+    display: block;
+    animation: tooltipFade 0.14s;
+}
+.flight-label:hover {
+    background: #eaf6ff;
+    box-shadow: 0 3px 12px #1a71d344;
+    border-color: #3394e6;
+    z-index: 999;
+}
+@keyframes tooltipFade {
+    from { opacity: 0; transform: translateX(-50%) translateY(10px);}
+    to   { opacity: 1; transform: translateX(-50%) translateY(0);}
+}
+/* responsive */
+@media (max-width: 900px) {
+    .quad-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr);}
+    .clock-face { width: 130px; height: 130px;}
+    .numbers span { font-size: 0.78em; transform: translate(-50%, -50%) rotate(calc(30deg * var(--i))) translateY(-49px);}
+    .center-label { font-size: 0.55em; width: 36px;}
+}
+.flight-arrows {
+    position: absolute;
+    width: 100%; height: 100%;
+    left: 0; top: 0;
+    z-index: 20;
+}
+
+.flight-arrow-line {
+    position: absolute;
+    background: linear-gradient(to right, #2a75b7 80%, transparent 100%);
+    height: 2.5px;
+    border-radius: 1.2px;
+    z-index: 30;
+}
+.flight-arrow-line::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0; top: 0;
+    width: 100px;  /* زود الطول إذا رغبت */
+    height: 2.5px;
+    background: linear-gradient(to right, #2a75b7 80%, transparent 100%);
+    transform: rotate(var(--angle));
+    transform-origin: left center;
+    margin-left: 0;
+    margin-top: -1.1px;
+}
+.flight-badge {
+    position: absolute;
+    top: -6px;
+    left: -8px;
+    background: #ff3e00;
+    color: #fff;
+    font-size: 0.83em;
+    border-radius: 50%;
+    padding: 2px 6px;
+    min-width: 20px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0 1px 4px #0002;
+    z-index: 20;
+    border: 2px solid #fff;
+}
+
+
+.flight-outer-box {
+    position: absolute;
+    min-width: 62px;
+    min-height: 26px;
+    background: linear-gradient(90deg, #e8f3ff 70%, #dbe9fa 100%);
+    padding: 7px 16px 7px 13px;
+    text-align: center;
+    font-size: 0.93em;
+    color: #174275;
+    z-index: 25;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 700;
+    border-radius: 15px;
+    border: 1.8px solid #b3d6fc;
+    box-shadow: 0 3px 16px 0 #77a6d511;
+    transition: box-shadow 0.18s, background 0.13s, border 0.16s;
+    cursor: pointer;
+    line-height: 1.08;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.flight-outer-box.bubble-right {
+    justify-content: flex-start;
+    text-align: left;
+    direction: ltr;
+    margin-left: -1px;
+}
+.flight-outer-box.bubble-left {
+    justify-content: flex-end;
+    text-align: right;
+    direction: rtl;
+    margin-right: -1px;
+}
+.flight-outer-box.bubble-bottom {
+    align-items: flex-end;
+}
+.flight-outer-box.bubble-top {
+    align-items: flex-start;
+}
+
+
+.flight-outer-box.flight-tooltip-dot {
+    background: #eaf6ff;
+    color: #1670cf;
+    border: 2px solid #abd2ff;
+    border-radius: 15px;
+    padding: 3px 7px;
+    font-size: 1em;
+    box-shadow: 0 2px 7px #65a1ec2a;
+    cursor: pointer;
+    position: absolute;
+    min-width: 36px;
+    min-height: 22px;
+    text-align: center;
+    font-weight: bold;
+    transition: box-shadow 0.12s, background 0.16s;
+    z-index: 99;
+}
+.tooltip-outer {
+    display: none;
+    position: absolute;
+    top: 10px;
+    left: 20%;
+    transform: translateX(-50%);
+    background: #fff;
+    color: #1670cf;
+    border: 1.5px solid #78a7e7;
+    border-radius: 9px;
+    padding: 10px 18px;
+    box-shadow: 0 6px 18px #135ebf22;
+    font-size: 1.07em;
+    min-width: 140px;
+    z-index: 5000;
+    text-align: right;
+    white-space: pre-line;
+    font-weight: normal;
+}
+.flight-tooltip-dot {
+    background: #e9f1fa;
+    color: #005;
+    border: 1.5px solid #1976d2;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative;
+}
+
+
+.flight-outer-box.flight-tooltip-dot .tooltip-outer {
+    display: none;
+    position: absolute;
+    left: 50%; top: 120%;
+    transform: translateX(-50%);
+    background: #fff;
+    color: #1670cf;
+    border: 1.5px solid #78a7e7;
+    border-radius: 9px;
+    padding: 10px 18px;
+    box-shadow: 0 6px 18px #135ebf22;
+    font-size: 1.09em;
+    min-width: 140px;
+    z-index: 5000;
+    text-align: right;
+    white-space: pre-line;
+    font-weight: normal;
+}
+.flight-outer-box.flight-tooltip-dot:hover {
+    background: #daf2ff;
+    box-shadow: 0 7px 24px #1974d455;
+    border-color: #3c9bf7;
+    display: block;
+}
+
+.ticks-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0; top: 0;
+    z-index: 11;
+    pointer-events: none;
+}
+.ticks-ring .tick {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 3.2px;
+    height: 20px;
+    background: #2364a8;
+    opacity: 0.27;
+    border-radius: 2.2px;
+    /* المسافة يجب أن تكون مساوية أو أكبر قليلاً من الأرقام */
+    transform:
+        rotate(calc(6deg * var(--t)))
+        translateY(-362px);    /* تقريباً نصف قطر الساعة ناقص نصف طول السن */
+}
+/* 
+.ticks-ring .tick.major {
+    width: 7px;
+    height: 47px;
+    background: #155291;
+    opacity: 0.53;
+    border-radius: 2.5px;
+    transform:
+        rotate(calc(6deg * var(--t)))
+        translateY(-335px);
+} */
+#flight-modal { transition: box-shadow 0.12s; }
+#flight-modal::-webkit-scrollbar { width: 8px; background: #eee; }
+#flight-modal::-webkit-scrollbar-thumb { background: #9ccdf5; border-radius: 8px; }
