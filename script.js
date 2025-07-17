@@ -232,7 +232,7 @@ function createClock(containerId, hallNum) {
                 box.innerHTML = `
                     <b style="font-size:0.90em;">${flight.FLT || flight.code || ''}</b>
                     <span style="color:#2987f8; font-size:0.92em;">${flight.arrivalTime}</span>
-                    <span style="font-size:0.90em;">${flight.TEP || flight.destination || ''}</span>
+                    
                 `;
     
                 // سجل كل فقاعة حسب زاويتها بدقة 3 منازل (يكفي)
