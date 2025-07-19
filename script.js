@@ -136,9 +136,6 @@ function createClock(containerId, hallNum) {
     }
     setInterval(updateClock, 1000); updateClock();
 
-    
-
-    
     // رسم الرحلات كبابلز على أطراف الساعة
     function renderFlightBubbles() {
         const arrowsDiv = container.querySelector('.flight-arrows');
@@ -159,7 +156,9 @@ function createClock(containerId, hallNum) {
             12:  { rotate: 0,   y: 0 },
         };
     
-        // تجميع الرحلات حسب الرقم فقط
+       
+        // بعد تجميع الرحلات في كل ساعة مثلاً (داخل loop halls[hallNum].forEach)
+
         const groups = {};
         halls[hallNum].forEach((flight, idx) => {
             let arrivalRaw = flight.STA || flight.arrival || '';
@@ -173,16 +172,22 @@ function createClock(containerId, hallNum) {
             }
             let key = h.toString().padStart(2, '0');
             let deg = (h % 12) * 30;
+            // لا تسمح بأكثر من 8 رحلات لكل ساعة!
             if (!groups[key]) groups[key] = [];
-            groups[key].push({
-                ...flight, idx, deg,
-                arrivalTime: match ? match[0] : ''
-            });
+            if (groups[key].length < 9) {
+                groups[key].push({
+                    ...flight, idx, deg,
+                    arrivalTime: match ? match[0] : ''
+                });
+            } else {
+                // ممكن تعطي تنبيه هنا
+                // alert('الحد الأقصى للرحلات في نفس الساعة هو 8!');
+            }
         });
+
     
-        // جمع الفقاعات حسب الزاوية الدقيقة لتسهيل اكتشاف التراكب
-        const boxesByAngle = {}; // key = angleDeg, value = [ {box, flight, ...}, ... ]
-        // إعداد التولتيب Tooltip
+        // جمع الفقاعات حسب الزاوية الدقيقة
+        const boxesByAngle = {};
         let tooltip = document.createElement('div');
         tooltip.className = 'flight-tooltip';
         tooltip.style.display = 'none';
@@ -198,8 +203,10 @@ function createClock(containerId, hallNum) {
         tooltip.style.direction = 'rtl';
         document.body.appendChild(tooltip);
     
-        // رسم الفقاعات وتخزينها حسب الزاوية
         Object.values(groups).forEach(arr => {
+            // رتب الفقاعات أبجديًا فقط حسب الكود (FLT أو code)
+            arr.sort((a, b) => (a.FLT || a.code || '').localeCompare(b.FLT || b.code || '', 'ar'));
+    
             let angleDeg = arr[0].deg;
             let hour = Math.round(angleDeg / 30) || 12;
             let adjust = bubbleAdjust[hour] || { rotate: 0, y: 0 };
@@ -213,34 +220,104 @@ function createClock(containerId, hallNum) {
             let minRadius = 80;
             let count = arr.length;
             let dynamicBubbleGap = count > 1 ? Math.min(38, Math.max(20, Math.floor((maxRadius - minRadius) / (count - 1)))) : 38;
-            let fontSize = count > 8 ? '0.72em' : count > 6 ? '0.78em' : '0.83em';
-    
+            let fontSize = count > 12 ? '0.64em' : count > 8 ? '0.72em' : count > 6 ? '0.78em' : '0.83em';
+
+            
             arr.forEach((flight, j) => {
                 let radius = maxRadius - (j * dynamicBubbleGap);
                 if (radius < minRadius) radius = minRadius;
                 let rad = (angleDeg - 90) * Math.PI / 180;
                 let x = Math.cos(rad) * radius;
-                let y = Math.sin(rad) * radius;
-    
+                let yBase = Math.sin(rad) * radius;
+                let yOffset = (count > 1 ? (j - (count - 1) / 2) * 9 : 10);
+                let y = yBase + adjust.y + yOffset;
+
+                if (hour === 2) {
+                    radius = radius * .85;  
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius;
+                    let spread = -28; // جرب 18 أو 20 أو 22 حسب زحام الفقاعات
+                    x = x + (j - (count - 1) / 2) * spread;
+                }
+            
+                // ✨ فرق أفقياً فقط للساعة 2 و 3
+                if (hour === 3) {
+                    radius = radius * .99;  
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius;
+                    let spread = 22; // جرب 18 أو 20 أو 22 حسب زحام الفقاعات
+                    x = x + (j - (count - 1) / 2) * spread;
+                }
+                
+                
+                if (hour === 4) {
+                    radius = radius * .90;  
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius;
+                
+                    
+                    let ySpread = 12; 
+                    y = y - (j - (count - 1) / 2) * ySpread;
+                    let spread = -35;
+                    x = x + (j - (count - 1) / 2) * spread;
+                }
+                
+                
+                if (hour === 6) {
+                    let ySpread = 40; // جرب 14، 17، أو حسب كثافة الرحلات
+                    y = y - (j - (count - 1) / 2) * ySpread;
+
+                    radius = radius * .90; // جرب 0.75 أو 0.7 أو أقل حسب قوة الزحام
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius + (y - yBase);
+                }
+                if (hour === 5) {
+                    let ySpread = 15; // جرب 14، 17، أو حسب كثافة الرحلات
+                    y = y - (j - (count - 1) / 2) * ySpread;
+
+                    radius = radius * .99; // جرب 0.75 أو 0.7 أو أقل حسب قوة الزحام
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius + (y - yBase);
+                }
+                
+                if (hour === 8) {
+                    radius = radius * .99; 
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius + (y - yBase);
+                    let spread = -10; 
+                    x = x + (j - (count - 1) / 2) * spread;                    
+                }
+                if (hour === 10) {
+                    radius = radius * .86; // قريب من المركز
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius;
+                    let spread = 14; // نفس spread للرقم 3 تقريباً
+                    x = x + (j - (count - 1) / 2) * spread;
+                    // اجعل y ثابت كما هو بدون ySpread إضافي
+                }
+                
+               
+                
+                
+            
                 const box = document.createElement('div');
                 box.className = `flight-outer-box`;
                 box.style = `
                     left:50%; top:50%;
-                    transform:translate(-50%, -50%) translate(${x}px, ${y + adjust.y}px) rotate(${adjust.rotate}deg);
-                    z-index:40; font-size:${fontSize}; min-width:0px; min-height:18px; padding:2px 7px;
+                    transform:translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${adjust.rotate}deg);
+                    z-index:40; font-size:${fontSize}; min-width:0px; min-height:14px; padding:2px 5px;
                 `;
                 box.innerHTML = `
                     <b style="font-size:0.90em;">${flight.FLT || flight.code || ''}</b>
                     <span style="color:#2987f8; font-size:0.92em;">${flight.arrivalTime}</span>
-                    
                 `;
-    
-                // سجل كل فقاعة حسب زاويتها بدقة 3 منازل (يكفي)
+            
+                // سجل كل فقاعة حسب زاويتها
                 let angleKey = angleDeg.toFixed(3);
                 if (!boxesByAngle[angleKey]) boxesByAngle[angleKey] = [];
                 boxesByAngle[angleKey].push({ box, flight, hour, idx: j, group: arr });
-    
-                // Tooltip عند المرور
+            
+                // Tooltip
                 box.onmouseenter = e => {
                     tooltip.style.display = 'block';
                     tooltip.innerHTML = `
@@ -257,27 +334,26 @@ function createClock(containerId, hallNum) {
                 box.onmouseleave = e => {
                     tooltip.style.display = 'none';
                 };
-    
+            
                 // عند الضغط على أي فقاعة في نفس الشعاع
                 box.onclick = function(e) {
                     let groupArr = boxesByAngle[angleKey].map(b => b.flight);
                     if (groupArr.length > 0) {
-                        showFlightModal(groupArr, hallNames[hallNum]);
+                        showFlightModal(groupArr, hallNames[hallNum], this);
                     }
                     e.stopPropagation();
                 };
-                
-    
+            
                 arrowsDiv.appendChild(box);
             });
+            
         });
-        
     
         // نافذة لعرض تفاصيل الرحلات المتراكبة
         function showFlightModal(flightsArr, hallName, anchorElem = null) {
             let old = document.getElementById('modal-flights');
             if (old) old.remove();
-        
+    
             // حساب معلومات التكرار
             const countMap = {};
             flightsArr.forEach(flight => {
@@ -292,7 +368,7 @@ function createClock(containerId, hallNum) {
                 hourOnly = parts[0].padStart(2, '0') + ':00';
             }
             let titleTime = hourOnly;
-        
+    
             // بناء النافذة
             let box = document.createElement('div');
             box.id = 'modal-flights';
@@ -302,7 +378,7 @@ function createClock(containerId, hallNum) {
                 box-shadow:0 4px 32px #0360b74a; padding:22px 32px; min-width:220px; font-size:1.08em; direction:rtl;
                 max-height:70vh; overflow:auto;
             `;
-        
+    
             // العنوان
             box.innerHTML = `
                 <div style="font-size:1.15em;font-weight:bold;text-align:center;margin-bottom:13px;">
@@ -328,27 +404,25 @@ function createClock(containerId, hallNum) {
                     إغلاق
                 </button>
             </div>`;
-        
+    
             document.body.appendChild(box);
-        
+    
             // تحديد مكان ظهور الصندوق حسب عنصر الضغط
             if (anchorElem) {
                 const rect = anchorElem.getBoundingClientRect();
                 const midX = rect.left + rect.width/2;
                 const topY = rect.top;
-                // ضع الصندوق فوق أو يمين العنصر إذا يوجد مساحة، وإلا بجانبه
                 let left = Math.max(10, Math.min(window.innerWidth - box.offsetWidth - 10, midX - box.offsetWidth/2));
                 let top = Math.max(15, topY - box.offsetHeight - 8);
                 if (top < 20) top = rect.bottom + 15;
                 box.style.left = `${left}px`;
                 box.style.top = `${top}px`;
             } else {
-                // fallback: وسط الشاشة
                 box.style.left = "50%";
                 box.style.top = "22%";
                 box.style.transform = "translate(-50%, 0)";
             }
-        
+    
             setTimeout(() => {
                 document.body.addEventListener('mousedown', closeModal, { once: true });
             }, 300);
@@ -356,14 +430,9 @@ function createClock(containerId, hallNum) {
                 if (!box.contains(e.target)) box.remove();
             }
         }
-        
-        
     }
-    
-    
-    
-    
 
+    
     
     // رفع إكسل أو CSV وإضافة الرحلات
     const excelInput = container.querySelector('.excelInput');
