@@ -142,16 +142,16 @@ function createClock(containerId, hallNum) {
         arrowsDiv.innerHTML = '';
         const maxRadius = 320;
         const bubbleAdjust = {
-            1:   { rotate: 50, y: -18 },
-            2:   { rotate: 50, y: -18 },
+            1:   { rotate: 30, y: 0 },
+            2:   { rotate: 60, y: 50 },
             3:   { rotate: -85, y: 0 },
-            4:   { rotate: -25, y: -18 },
+            4:   { rotate: -50, y: -18 },
             5:   { rotate: 0,   y: 0 },
             6:   { rotate: 0,   y: 0 },
-            7:   { rotate: 0,   y: 0 },
+            7:   { rotate: 40,   y: 0 },
             8:   { rotate: 75,  y: 13 },
-            9:   { rotate: 80,  y: -6 },
-            10:  { rotate: -40,  y: 16 },
+            9:   { rotate: 89,  y: -2 },
+            10:  { rotate: -50,  y: -60 },
             11:  { rotate: -15,  y: 15 },
             12:  { rotate: 0,   y: 0 },
         };
@@ -431,7 +431,7 @@ function createClock(containerId, hallNum) {
             }
         }
     }
-
+    
     
     
     // رفع إكسل أو CSV وإضافة الرحلات
