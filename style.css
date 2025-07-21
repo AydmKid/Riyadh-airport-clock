@@ -8,7 +8,7 @@ body {
     flex-direction: column;
     align-items: center;
 }
-#flights-bg-page { 
+#flights-bg-page {
     position: fixed;
     inset: 0;
     z-index: 0;
@@ -151,7 +151,7 @@ body {
     position: absolute;
     left: 50%; top: 49%;
     transform: translate(-50%, -50%);
-    color: #ff00f2;
+    color: #17609b;
     text-align: center;
     z-index: 20;
     font-size: 2em;
@@ -167,7 +167,7 @@ body {
     margin-top: 2px;
     letter-spacing: 1.5px;
     font-weight: 400;
-    color: #ff00f2;
+    color: #17609b;
     line-height: 1.1;
 }
 .digital {
@@ -419,7 +419,20 @@ body {
     border-color: #3c9bf7;
     display: block;
 }
-
+.clock-icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 10;
+    pointer-events: none; /* حتى لا تتداخل مع عناصر الساعة */
+    opacity: 0.38; /* خفيف/شفاف */
+}
+.clock-icon svg {
+    width: 44px;
+    height: 44px;
+    display: block;
+}
 .ticks-ring {
     position: absolute;
     width: 850px;
