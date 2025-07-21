@@ -603,7 +603,7 @@ function createClock(containerId, hallNum) {
             saveHallsToStorage();
             renderFlightBubbles();
             renderFlightsBackground();
-        }
+        } 
     };
 }
 
