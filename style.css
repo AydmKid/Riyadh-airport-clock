@@ -4,16 +4,28 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-}
-.quad-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 17px;
-    padding: 16px 2px;
-    min-height: 100vh;
-    justify-items: center;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+}
+#flights-bg-page {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0.68;
+}
+
+#flights-bg-page span {
+    position: absolute;
+    color: #2987f8cc !important; 
+    font-size: 1em !important; 
+    font-weight: bold;
+    opacity: 2 !important; 
+    filter: blur(1.8px);
+    pointer-events: none;
+    z-index: 100000 !important;
 }
 
 .clock-box {
@@ -21,10 +33,27 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition:
+        opacity 0.55s cubic-bezier(.4,0,.2,1),
+        transform 0.65s cubic-bezier(.6,-0.28,.74,.05);
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
 }
+
+.clock-box.fade-out {
+    opacity: 0;
+    transform: scale(0.94) rotate(-6deg);
+    pointer-events: none;
+}
+
+.clock-box.fade-in {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
 .clock-face {
-    width: 750px;
-    height: 750px;
+    width: 850px;
+    height: 850px;
     position: relative;
     background: radial-gradient(circle at 62% 38%, #fafdff 77%, #ddeffe 100%);
     border: 5px solid #133d61;
@@ -35,7 +64,7 @@ body {
 }
 .hand.hour {
     width: 18px;
-    height: 200px;  /* اجعلها تصل بين المركز والثلث الأول */
+    height: 260px;  /* اجعلها تصل بين المركز والثلث الأول */
     background: linear-gradient(180deg, #14305b 64%, #3189e2 100%);
     border-radius: 9px;
     position: absolute;
@@ -47,7 +76,7 @@ body {
 }
 .hand.minute {
     width: 11px;
-    height: 295px;  /* إلى ما قبل السنون الكبيرة */
+    height: 375px;  /* إلى ما قبل السنون الكبيرة */
     background: linear-gradient(180deg, #197dbe 60%, #a3d5ff 100%);
     border-radius: 7px;
     position: absolute;
@@ -59,7 +88,7 @@ body {
 }
 .hand.second {
     width: 5px;
-    height: 340px;  /* تقريباً إلى حدود السنون */
+    height: 400px;  /* تقريباً إلى حدود السنون */
     background: linear-gradient(180deg, #fd3838 72%, #ffbebe 100%);
     border-radius: 4px;
     position: absolute;
@@ -90,7 +119,7 @@ body {
     z-index: 10;
 }
 .numbers span {
-    font-size: 2.6em;
+    font-size: 3.0em;
     font-weight: bold;
     color: #1670cf;
     position: absolute;
@@ -103,28 +132,29 @@ body {
 }
 
 /* أرقام الساعة، كل رقم بموقعه */
-.number12 { transform: translate(-50%, -50%) rotate(0deg)    translateY(-360px) rotate(0deg);}
-.number1  { transform: translate(-50%, -50%) rotate(30deg)   translateY(-360px) rotate(-30deg);}
-.number2  { transform: translate(-50%, -50%) rotate(60deg)   translateY(-360px) rotate(-60deg);}
-.number3  { transform: translate(-50%, -50%) rotate(90deg)   translateY(-360px) rotate(-90deg);}
-.number4  { transform: translate(-50%, -50%) rotate(120deg)  translateY(-360px) rotate(-120deg);}
-.number5  { transform: translate(-50%, -50%) rotate(150deg)  translateY(-360px) rotate(-150deg);}
-.number6  { transform: translate(-50%, -50%) rotate(180deg)  translateY(-360px) rotate(-180deg);}
-.number7  { transform: translate(-50%, -50%) rotate(210deg)  translateY(-360px) rotate(-210deg);}
-.number8  { transform: translate(-50%, -50%) rotate(240deg)  translateY(-360px) rotate(-240deg);}
-.number9  { transform: translate(-50%, -50%) rotate(270deg)  translateY(-360px) rotate(-270deg);}
-.number10 { transform: translate(-50%, -20%) rotate(300deg)  translateY(-360px) rotate(-300deg);}
-.number11 { transform: translate(-50%, -50%) rotate(330deg)  translateY(-360px) rotate(-330deg);}
+.number12 { transform: translate(-50%, -50%) rotate(0deg)    translateY(-405px) rotate(0deg);}
+.number1  { transform: translate(-50%, -50%) rotate(30deg)   translateY(-405px) rotate(-30deg);}
+.number2  { transform: translate(-50%, -50%) rotate(60deg)   translateY(-405px) rotate(-60deg);}
+.number3  { transform: translate(-50%, -50%) rotate(90deg)   translateY(-405px) rotate(-90deg);}
+.number4  { transform: translate(-50%, -50%) rotate(120deg)  translateY(-405px) rotate(-120deg);}
+.number5  { transform: translate(-50%, -50%) rotate(150deg)  translateY(-405px) rotate(-150deg);}
+.number6  { transform: translate(-50%, -50%) rotate(180deg)  translateY(-405px) rotate(-180deg);}
+.number7  { transform: translate(-50%, -50%) rotate(210deg)  translateY(-405px) rotate(-210deg);}
+.number8  { transform: translate(-50%, -50%) rotate(240deg)  translateY(-405px) rotate(-240deg);}
+.number9  { transform: translate(-50%, -50%) rotate(270deg)  translateY(-405px) rotate(-270deg);}
+.number10 { transform: translate(-40%, -50%) rotate(300deg)  translateY(-405px) rotate(-300deg);}
+.number11 { transform: translate(-50%, -50%) rotate(330deg)  translateY(-405px) rotate(-330deg);}
+
 
 
 .center-label {
     position: absolute;
-    left: 50%; top: 53%;
+    left: 50%; top: 49%;
     transform: translate(-50%, -50%);
-    color: #1670cf;
+    color: #ff00f2;
     text-align: center;
     z-index: 20;
-    font-size: 1em;
+    font-size: 2em;
     font-weight: 900;
     font-family: Arial, sans-serif;
     letter-spacing: 1.3px;
@@ -133,11 +163,11 @@ body {
     line-height: 1.13;
 }
 .center-label .arrival {
-    font-size: 0.47em;
+    font-size: 0.55em;
     margin-top: 2px;
     letter-spacing: 1.5px;
     font-weight: 400;
-    color: #4091d9;
+    color: #ff00f2;
     line-height: 1.1;
 }
 .digital {
@@ -217,11 +247,19 @@ body {
 }
 /* responsive */
 @media (max-width: 900px) {
-    .quad-grid { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr);}
+   
     .clock-face { width: 130px; height: 130px;}
     .numbers span { font-size: 0.78em; transform: translate(-50%, -50%) rotate(calc(30deg * var(--i))) translateY(-49px);}
     .center-label { font-size: 0.55em; width: 36px;}
 }
+@keyframes float-fade {
+    0% { transform: translateY(0) scale(1);}
+    100% { transform: translateY(-60px) scale(1.05);}
+  }
+  #flights-bg-page span {
+    animation: float-fade 9s linear infinite alternate;
+  }
+  
 .flight-arrows {
     position: absolute;
     width: 100%; height: 100%;
@@ -274,13 +312,13 @@ body {
     background: linear-gradient(120deg, #eaf6fb 60%, #c4e9fc 100%);
     padding: 8px 16px 8px 16px;
     text-align: center;
-    font-size: 1.01em;
+    font-size: 1.0em;
     color: #21745f;
     z-index: 25;
     display: flex;
     align-items: center;
     gap: 5px;
-    font-weight: 700;
+    font-weight: 500;
     border-radius: 19px 19px 19px 7px;
     border: 1.9px solid #a8dedb;
     box-shadow: 0 3px 9px #32b6a220;
@@ -289,14 +327,6 @@ body {
     white-space: nowrap;
     user-select: none;
 }
-
-
-
-
-
-
-
-
 
 
 .flight-outer-box.bubble-right {
@@ -392,8 +422,8 @@ body {
 
 .ticks-ring {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 850px;
+    height: 850px;
     left: 0; top: 0;
     z-index: 11;
     pointer-events: none;
@@ -409,8 +439,9 @@ body {
     /* المسافة يجب أن تكون مساوية أو أكبر قليلاً من الأرقام */
     transform:
         rotate(calc(6deg * var(--t)))
-        translateY(-362px);    /* تقريباً نصف قطر الساعة ناقص نصف طول السن */
+        translateY(-399px);    /* تقريباً نصف قطر الساعة ناقص نصف طول السن */
 }
+
 /* 
 .ticks-ring .tick.major {
     width: 7px;
@@ -425,3 +456,43 @@ body {
 #flight-modal { transition: box-shadow 0.12s; }
 #flight-modal::-webkit-scrollbar { width: 8px; background: #eee; }
 #flight-modal::-webkit-scrollbar-thumb { background: #9ccdf5; border-radius: 8px; }
+.clock-nav-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 40px;
+}
+
+.clock-nav-btn {
+    background: #1466c6;
+    color: #fff;
+    font-size: 2.1em;
+    border: none;
+    border-radius: 12px;
+    padding: 13px 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.17s;
+    position: relative;
+    top: 0;
+}
+.clock-nav-btn:hover {
+    background: #2092ee;
+}
+
+.hall-title-content {
+    text-align: center;
+    line-height: 1.5;
+  }
+  
+  .hall-title-content .top {
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+  
+  .hall-title-content .bottom {
+    font-size: 1em;
+    margin-top: 4px;
+  }
+  
