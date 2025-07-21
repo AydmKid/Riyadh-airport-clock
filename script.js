@@ -505,7 +505,7 @@ function createClock(containerId, hallNum) {
             renderFlightsBackground();
         }
     };
-}
+} 
 
 function renderBigClock() {
     createClock('clock-big', currentHall);
