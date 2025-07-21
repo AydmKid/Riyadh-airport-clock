@@ -7,25 +7,25 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/svg+xml"
           href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path fill='%232987f8' d='M2 29l28-13-28-13v9l20 4-20 4z'/></svg>">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://ialab.it.monash.edu/webcola/cola.v3.min.js"></script>
+          
 </head>
 <body>
-<div class="quad-grid">
-    <div class="clock-col"><div id="clock1" class="clock-box"></div></div>
-    <div class="clock-col"><div id="clock2" class="clock-box"></div></div>
-    <div class="clock-col"><div id="clock3" class="clock-box"></div></div>
-    <div class="clock-col"><div id="clock4" class="clock-box"></div></div>
+  <div id="flights-bg-page"></div>
+  <div class="clock-nav-wrapper">
+    <button class="clock-nav-btn" id="prev-hall">&lt;</button>
+    <div id="clock-big" class="clock-box"></div>
+    <button class="clock-nav-btn" id="next-hall"> &gt;</button>
 </div>
-<div class="clockface">
-    <div class="number number12">12</div>
-    <div class="number number3">3</div>
-    <div class="number number6">6</div>
-    <div class="number number9">9</div>
-    <!-- يمكن إضافة بقية الأرقام 1-11 بنفس الطريقة إذا لزم -->
-  </div>
-  <div class="flight-outer-box flight-tooltip-dot">...</div>
 
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="script.js"></script>
+
 </body>
 <script>
     window.onload = function() {
