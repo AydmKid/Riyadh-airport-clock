@@ -32,10 +32,69 @@
     };
 })();
 
+function renderFlightsBackground() {
+    const bg = document.getElementById('flights-bg-page');
+    if (!bg) return;
+    bg.innerHTML = '';
+
+    // جمع كل الرحلات من كل الصالات
+    let allFlights = [];
+    Object.values(halls).forEach(list => {
+        allFlights.push(...list);
+    });
+
+    // يمكن تقليل العدد اذا كثيرة جدا
+    const maxCount = 40; // لتقليل التزاحم
+    if (allFlights.length > maxCount) {
+        allFlights = allFlights.sort(() => Math.random() - 0.5).slice(0, maxCount);
+    }
+
+    allFlights.forEach((flight, i) => {
+        const span = document.createElement('span');
+        // محتوى الرحلة
+        span.textContent = `${flight.FLT || flight.code || ''}  ${flight.arrival || flight.STA || ''}`;
+        // توزيع عشوائي
+        const top = Math.random() * 85 + 5; // نسبة % من أعلى
+        const left = Math.random() * 80 + 10; // نسبة % من اليسار
+        const fontSize = 1.2 + Math.random() * 1.8; // بين 1.2em و3em
+        const blur = Math.random() > 0.8 ? 2 : 1; // بعض الرحلات blur أعلى
+        span.style.top = `${top}vh`;
+        span.style.left = `${left}vw`;
+        span.style.fontSize = `${fontSize}em`;
+        span.style.position = 'absolute';
+        span.style.filter = `blur(${blur}px)`;
+        span.style.opacity = (0.12 + Math.random() * 0.12).toFixed(2); // شفافية خفيفة
+        span.style.pointerEvents = 'none';
+        bg.appendChild(span);
+    });
+}
+
+
+let currentHall = 1; // 1 إلى 4
+
 
 const halls = { 1: [], 2: [], 3: [], 4: [] };
-const hallNames = { 1: 'صالة 1', 2: 'صالة 2', 3: 'صالة 3', 4: 'صالة 4' };
-
+const hallNames = {
+    1: `<div class="hall-title-content">
+          <div class="top">Flights Readiness Clock</div>
+          <div class="bottom">صالة 1</div>
+        </div>`,
+    2: `<div class="hall-title-content">
+          <div class="top">Flights Readiness Clock</div>
+          <div class="bottom">صالة 2</div>
+        </div>`,
+    3: `<div class="hall-title-content">
+          <div class="top">Flights Readiness Clock</div>
+          <div class="bottom">صالة 3</div>
+        </div>`,
+    4: `<div class="hall-title-content">
+          <div class="top">Flights Readiness Clock</div>
+          <div class="bottom">صالة 4</div>
+        </div>`
+  };
+  
+  
+  
 // استخراج الوقت فقط من أي نص (دائمًا يرجع HH:mm أو "")
 function extractHourMinute(str) {
     let match = String(str).match(/(\d{1,2}):(\d{2})/);
@@ -75,6 +134,12 @@ function saveHallsToStorage() {
 
 loadHallsFromStorage();
 
+function switchClock(num) {
+    for (let i = 1; i <= 4; i++) {
+      document.getElementById('clock' + i).style.display = (i === num) ? 'block' : 'none';
+    }
+  }
+
 // =========================
 // إنشاء الساعة ورسم الرحلات
 // =========================
@@ -87,7 +152,7 @@ function createClock(containerId, hallNum) {
             <div class="ticks-ring"></div>
             <div class="hands">
                 <div class="hand hour"></div>
-                <div class="hand minute"></div>
+                <div class="hand minute"></div> 
                 <div class="hand second"></div>
             </div>
             <div class="center-label">BHS<br><span class="arrival">ARRIVAL</span></div>
@@ -142,49 +207,37 @@ function createClock(containerId, hallNum) {
         arrowsDiv.innerHTML = '';
         const maxRadius = 320;
         const bubbleAdjust = {
-            1:   { rotate: 30, y: 0 },
-            2:   { rotate: 60, y: 50 },
-            3:   { rotate: -85, y: 0 },
-            4:   { rotate: -50, y: -18 },
-            5:   { rotate: 0,   y: 0 },
-            6:   { rotate: 0,   y: 0 },
-            7:   { rotate: 40,   y: 0 },
-            8:   { rotate: 75,  y: 13 },
-            9:   { rotate: 89,  y: -2 },
-            10:  { rotate: -50,  y: -60 },
-            11:  { rotate: -15,  y: 15 },
-            12:  { rotate: 0,   y: 0 },
+            1:   { rotate: 30, y: 0,    spread: 28,  rScale: 0.99, ySpread: 0 },
+            2:   { rotate: 60, y: 50,   spread: -28, rScale: 0.99, ySpread: 0 },
+            3:   { rotate: -85, y: 0,   spread: -28, rScale: 1.10, ySpread: 0 },
+            4:   { rotate: -50, y: -18, spread: -35, rScale: 1.00, ySpread: 8 },
+            5:   { rotate: 0,   y: 0,   spread: 0,   rScale: 1.10, ySpread: 15 },
+            6:   { rotate: 0,   y: 0,   spread: 0,   rScale: 0.99, ySpread: 40 },
+            7:   { rotate: 40,  y: 0,   spread: 0,   rScale: 0.99, ySpread: 30 },
+            8:   { rotate: 75,  y: 13,  spread: -10, rScale: 0.99, ySpread: 0 },
+            9:   { rotate: 89,  y: -2,  spread: -10, rScale: 1.15, ySpread: 0 },
+            10:  { rotate: -50, y: -60, spread: 14,  rScale: 1.05, ySpread: 0 },
+            11:  { rotate: -15, y: 15,  spread: 14,  rScale: 1.10, ySpread: 0 },
+            12:  { rotate: 0,   y: 0,   spread: 14,  rScale: 1.10, ySpread: 0 },
         };
-    
-       
-        // بعد تجميع الرحلات في كل ساعة مثلاً (داخل loop halls[hallNum].forEach)
-
+        
+        
         const groups = {};
         halls[hallNum].forEach((flight, idx) => {
             let arrivalRaw = flight.STA || flight.arrival || '';
-            let timeStr = String(arrivalRaw).trim();
-            if (timeStr.includes(' ')) timeStr = timeStr.split(' ').pop();
-            let match = timeStr.match(/(\d{1,2}):(\d{2})/);
-            let h = 0, m = 0;
+            let match = String(arrivalRaw).trim().match(/(\d{1,2}):(\d{2})/);
+            let h = match ? parseInt(match[1], 10) : 0;
+            let ampm = '';
             if (match) {
-                h = parseInt(match[1], 10);
-                m = parseInt(match[2], 10);
+            let hour24 = parseInt(match[1], 10);
+            ampm = hour24 < 12 ? 'AM' : 'PM';
             }
-            let key = h.toString().padStart(2, '0');
+            let key = h.toString().padStart(2, '0') + '_' + ampm;
             let deg = (h % 12) * 30;
-            // لا تسمح بأكثر من 8 رحلات لكل ساعة!
-            if (!groups[key]) groups[key] = [];
-            if (groups[key].length < 9) {
-                groups[key].push({
-                    ...flight, idx, deg,
-                    arrivalTime: match ? match[0] : ''
-                });
-            } else {
-                // ممكن تعطي تنبيه هنا
-                // alert('الحد الأقصى للرحلات في نفس الساعة هو 8!');
-            }
+            // بدون أي شرط عددي هنا!
+            groups[key] = groups[key] || [];
+            groups[key].push({ ...flight, idx, deg, arrivalTime: match ? match[0] : '' });
         });
-
     
         // جمع الفقاعات حسب الزاوية الدقيقة
         const boxesByAngle = {};
@@ -204,7 +257,7 @@ function createClock(containerId, hallNum) {
         document.body.appendChild(tooltip);
     
         Object.values(groups).forEach(arr => {
-            // رتب الفقاعات أبجديًا فقط حسب الكود (FLT أو code)
+            
             arr.sort((a, b) => (a.FLT || a.code || '').localeCompare(b.FLT || b.code || '', 'ar'));
     
             let angleDeg = arr[0].deg;
@@ -232,74 +285,106 @@ function createClock(containerId, hallNum) {
                 let yOffset = (count > 1 ? (j - (count - 1) / 2) * 9 : 10);
                 let y = yBase + adjust.y + yOffset;
 
-                if (hour === 2) {
-                    radius = radius * .85;  
-                    x = Math.cos(rad) * radius;
-                    y = Math.sin(rad) * radius;
-                    let spread = -28; // جرب 18 أو 20 أو 22 حسب زحام الفقاعات
-                    x = x + (j - (count - 1) / 2) * spread;
+                let isPM = (flight.arrivalTime && parseInt(flight.arrivalTime.split(':')[0], 10) >= 12);
+                if (isPM) {
+                    y += 25; 
                 }
-            
-                // ✨ فرق أفقياً فقط للساعة 2 و 3
-                if (hour === 3) {
+
+                if (hour === 2) {
                     radius = radius * .99;  
                     x = Math.cos(rad) * radius;
                     y = Math.sin(rad) * radius;
-                    let spread = 22; // جرب 18 أو 20 أو 22 حسب زحام الفقاعات
+                    let spread = -28; 
+                    x = x + (j - (count - 1) / 2) * spread;
+                }
+                if (hour === 3) {
+                    radius = radius * 1.10;  
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius;
+                    let spread = -28; 
+                    x = x + (j - (count - 1) / 2) * spread;
+                }
+                
+                if (hour === 4) {
+                    radius = radius * 1.10;
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius + (y - yBase);
+
+                    let ySpread = 2; 
+                    y = y - (j - (count - 1) / 2) * ySpread;
+                    let spread = 5;
                     x = x + (j - (count - 1) / 2) * spread;
                 }
                 
                 
-                if (hour === 4) {
-                    radius = radius * .90;  
-                    x = Math.cos(rad) * radius;
-                    y = Math.sin(rad) * radius;
-                
-                    
-                    let ySpread = 12; 
+                if (hour === 5) {
+                    let ySpread = 15; 
                     y = y - (j - (count - 1) / 2) * ySpread;
-                    let spread = -35;
-                    x = x + (j - (count - 1) / 2) * spread;
+
+                    radius = radius * 1.02; 
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius + (y - yBase);
                 }
                 
                 
                 if (hour === 6) {
-                    let ySpread = 40; // جرب 14، 17، أو حسب كثافة الرحلات
+                    let ySpread = 10; 
                     y = y - (j - (count - 1) / 2) * ySpread;
 
-                    radius = radius * .90; // جرب 0.75 أو 0.7 أو أقل حسب قوة الزحام
+                    radius = radius * 1.10; 
                     x = Math.cos(rad) * radius;
                     y = Math.sin(rad) * radius + (y - yBase);
                 }
-                if (hour === 5) {
-                    let ySpread = 15; // جرب 14، 17، أو حسب كثافة الرحلات
+                
+                if (hour === 7) {
+                    let ySpread = 15; 
                     y = y - (j - (count - 1) / 2) * ySpread;
 
-                    radius = radius * .99; // جرب 0.75 أو 0.7 أو أقل حسب قوة الزحام
+                    radius = radius * .99; 
                     x = Math.cos(rad) * radius;
                     y = Math.sin(rad) * radius + (y - yBase);
                 }
                 
                 if (hour === 8) {
-                    radius = radius * .99; 
+                    radius = radius * 1.10; 
+                    x = Math.cos(rad) * radius;
+                    y = Math.sin(rad) * radius + (y - yBase);
+                    let spread = -10; 
+                    x = x + (j - (count - 1) / 2) * spread;                    
+                }
+
+                if (hour === 9) {
+                    radius = radius * 1.15; 
                     x = Math.cos(rad) * radius;
                     y = Math.sin(rad) * radius + (y - yBase);
                     let spread = -10; 
                     x = x + (j - (count - 1) / 2) * spread;                    
                 }
                 if (hour === 10) {
-                    radius = radius * .86; // قريب من المركز
+                    radius = radius * 1.05; 
                     x = Math.cos(rad) * radius;
                     y = Math.sin(rad) * radius;
-                    let spread = 14; // نفس spread للرقم 3 تقريباً
+                    let spread = 14; 
                     x = x + (j - (count - 1) / 2) * spread;
-                    // اجعل y ثابت كما هو بدون ySpread إضافي
+                }
+                if (hour === 11) {
+                    // إذا العدد كبير spread أكبر لتفادي التداخل
+                    let spread = count > 8 ? 31 : 6;
+                    // نحسب تمركز منتصف الصف بدقة حول الرقم 11
+                    x = x + (j - (count - 1) / 2) * spread;
+                    // نزول أو صعود خفيف حسب AM/PM
+                    y += isPM ? 24 : -1;
                 }
                 
-               
+                if (hour === 12) {
+                    // نفس منطق 11 مع spread أكثر قليلاً إذا زاد العدد
+                    let spread = count > 8 ? 32 : 1;
+                    x = x + (j - (count - 1) / 2) * spread;
+                    y += isPM ? 19 : -3;
+                }
                 
                 
-            
+      
                 const box = document.createElement('div');
                 box.className = `flight-outer-box`;
                 box.style = `
@@ -313,7 +398,7 @@ function createClock(containerId, hallNum) {
                 `;
             
                 // سجل كل فقاعة حسب زاويتها
-                let angleKey = angleDeg.toFixed(3);
+                let angleKey = `hour_${hour}`;
                 if (!boxesByAngle[angleKey]) boxesByAngle[angleKey] = [];
                 boxesByAngle[angleKey].push({ box, flight, hour, idx: j, group: arr });
             
@@ -322,9 +407,7 @@ function createClock(containerId, hallNum) {
                     tooltip.style.display = 'block';
                     tooltip.innerHTML = `
                         <div><b>كود الرحلة:</b> ${flight.FLT || flight.code || ''}</div>
-                        <div><b>الوقت:</b> ${flight.arrivalTime}</div>
-                        <div><b>الوجهة:</b> ${flight.TEP || flight.destination || ''}</div>
-                        <div><b>قاعة:</b> ${hallNames[hallNum]}</div>
+                        <div><b>الوقت:</b> ${flight.arrivalTime}</div> 
                     `;
                 };
                 box.onmousemove = e => {
@@ -348,6 +431,8 @@ function createClock(containerId, hallNum) {
             });
             
         });
+
+        
     
         // نافذة لعرض تفاصيل الرحلات المتراكبة
         function showFlightModal(flightsArr, hallName, anchorElem = null) {
@@ -471,6 +556,7 @@ function createClock(containerId, hallNum) {
                 halls[hallNum] = flightsToAdd;
                 saveHallsToStorage();
                 renderFlightBubbles();
+                renderFlightsBackground();
                 alert(`تم رفع ${flightsToAdd.length} رحلة جديدة وحذف القديمة!`);
             };
             reader.readAsText(file);
@@ -501,6 +587,7 @@ function createClock(containerId, hallNum) {
                 halls[hallNum] = flightsToAdd;
                 saveHallsToStorage();
                 renderFlightBubbles();
+                renderFlightsBackground();
                 alert(`تم رفع ${flightsToAdd.length} رحلة جديدة وحذف القديمة!`);
             };
             reader.readAsArrayBuffer(file);
@@ -515,12 +602,39 @@ function createClock(containerId, hallNum) {
             halls[hallNum] = [];
             saveHallsToStorage();
             renderFlightBubbles();
+            renderFlightsBackground();
         }
     };
 }
 
-// إنشاء 4 ساعات
-createClock('clock1', 1);
-createClock('clock2', 2);
-createClock('clock3', 3);
-createClock('clock4', 4);
+function renderBigClock() {
+    createClock('clock-big', currentHall);
+    renderFlightsBackground();
+}
+
+renderBigClock();
+
+document.getElementById('prev-hall').onclick = function() {
+    let nextHall = (currentHall === 1) ? 4 : currentHall - 1;
+    fadeClockAndSwitch(nextHall);
+};
+document.getElementById('next-hall').onclick = function() {
+    let nextHall = (currentHall === 4) ? 1 : currentHall + 1;
+    fadeClockAndSwitch(nextHall);
+};
+
+
+function fadeClockAndSwitch(newHall) {
+    const clockBox = document.getElementById('clock-big');
+    clockBox.classList.add('fade-out');
+    setTimeout(() => {
+        currentHall = newHall;
+        renderBigClock();
+        clockBox.classList.remove('fade-out');
+        clockBox.classList.add('fade-in');
+        setTimeout(() => {
+            clockBox.classList.remove('fade-in');
+        }, 400);
+    }, 450);
+}
+
