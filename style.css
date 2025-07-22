@@ -11,6 +11,33 @@ body {
     flex-direction: column;
     align-items: center;
 } 
+.bg-icons {
+    position: fixed;
+    width: 100vw;
+    height: 0;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* حتى لا تعيق التفاعل */
+    z-index: 1; /* ضعها أسفل بقية العناصر */
+}
+
+.bg-icon {
+    position: absolute;
+    top: 14px;
+    width: 290px; /* <-- كبر الحجم هنا */
+    opacity: 0.60;
+    filter: blur(0.7px) drop-shadow(0 4px 19px #2987f865);
+    user-select: none;
+}
+
+
+.bg-icon-left {
+    left: 24px;
+}
+
+.bg-icon-right {
+    right: 24px;
+}
 #flights-bg-page {
     position: fixed;
     inset: 0;
