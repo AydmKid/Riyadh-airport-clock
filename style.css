@@ -1,5 +1,8 @@
 body {
-    background: linear-gradient(135deg, #e3f1ff 0%, #bdddfb 100%);
+         background: 
+          url('Riyadh.svg') center 120px no-repeat,
+          linear-gradient(135deg, #e3f1ff 0%, #bdddfb 100%);
+        background-size: 220px, cover;
     font-family: 'Tajawal', Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -497,15 +500,16 @@ body {
 .hall-title-content {
     text-align: center;
     line-height: 1.5;
-  }
-  
-  .hall-title-content .top {
+}
+.hall-title-content .top {
     font-weight: bold;
-    font-size: 1.1em;
-  }
-  
-  .hall-title-content .bottom {
+    font-size: 1.50em;
+    color: #2987f8;        /* أزرق */
+    letter-spacing: 1px;
+}
+.hall-title-content .bottom {
     font-size: 1em;
     margin-top: 4px;
-  }
+    color: #2d3640;        /* رمادي غامق */
+}
   
