@@ -312,8 +312,7 @@ function createClock(containerId, hallNum) {
                     tooltip.innerHTML = `
                         <div><b>كود الرحلة:</b> ${flight.FLT || flight.code || ''}</div>
                         <div><b>الوقت:</b> ${flight.arrivalTime}</div>
-                        <div><b>الوجهة:</b> ${flight.TEP || flight.destination || ''}</div>
-                        <div><b>القاعة:</b> ${hallNames[hallNum]}</div>
+                      
                     `;
                 };
                 box.onmousemove = e => {
