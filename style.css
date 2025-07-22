@@ -180,11 +180,11 @@ body {
 .center-label {
     position: absolute;
     left: 50%; top: 49%;
-    transform: translate(-50%, -50%);
+    transform: translate(-90%, -50%);
     color: #17609b;
     text-align: center;
-    z-index: 20;
-    font-size: 2em;
+    z-index: 0;
+    font-size: 3.50em;
     font-weight: 900;
     font-family: Arial, sans-serif;
     letter-spacing: 1.3px;
