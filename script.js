@@ -9,7 +9,7 @@
         modal.id = 'flight-modal';
         modal.style.display = 'none';
         modal.style.position = 'fixed';
-        modal.style.top = '50%'; 
+        modal.style.top = '50%';
         modal.style.left = '50%';
         modal.style.transform = 'translate(-50%,-50%)';
         modal.style.background = '#fff';
@@ -76,20 +76,20 @@ let currentHall = 1; // 1 إلى 4
 const halls = { 1: [], 2: [], 3: [], 4: [] };
 const hallNames = {
     1: `<div class="hall-title-content">
-          <div class="top">Flights Readiness Clock</div>
-          <div class="bottom">صالة 1</div>
+          <div class="top">BHS ARRIVAL Flights Readiness Clock</div>
+          <div class="bottom">Terminal 1</div>
         </div>`,
     2: `<div class="hall-title-content">
-          <div class="top">Flights Readiness Clock</div>
-          <div class="bottom">صالة 2</div>
+          <div class="top">BHS ARRIVAL Flights Readiness Clock</div>
+          <div class="bottom">Terminal 2</div>
         </div>`,
     3: `<div class="hall-title-content">
-          <div class="top">Flights Readiness Clock</div>
-          <div class="bottom">صالة 3</div>
+          <div class="top">BHS ARRIVAL Flights Readiness Clock</div>
+          <div class="bottom">Terminal 3</div>
         </div>`,
     4: `<div class="hall-title-content">
-          <div class="top">Flights Readiness Clock</div>
-          <div class="bottom">صالة 4</div>
+          <div class="top">BHS ARRIVAL Flights Readiness Clock</div>
+          <div class="bottom">Terminal 4</div>
         </div>`
   };
   
@@ -155,7 +155,9 @@ function createClock(containerId, hallNum) {
                 <div class="hand minute"></div> 
                 <div class="hand second"></div>
             </div>
-            <div class="center-label">BHS<br><span class="arrival">ARRIVAL</span></div>
+            <div class="clock-icon">
+                <img src="Riyadh.svg" alt="logo" >
+            </div>
             <div class="flight-arrows"></div>
         </div>
         <div class="digital"><span class="now"></span></div>
@@ -312,7 +314,8 @@ function createClock(containerId, hallNum) {
                     tooltip.innerHTML = `
                         <div><b>كود الرحلة:</b> ${flight.FLT || flight.code || ''}</div>
                         <div><b>الوقت:</b> ${flight.arrivalTime}</div>
-                      
+                       
+                       
                     `;
                 };
                 box.onmousemove = e => {
@@ -504,7 +507,7 @@ function createClock(containerId, hallNum) {
             renderFlightsBackground();
         }
     };
-} 
+}
 
 function renderBigClock() {
     createClock('clock-big', currentHall);
